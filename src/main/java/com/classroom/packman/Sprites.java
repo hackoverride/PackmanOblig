@@ -5,12 +5,13 @@
 package com.classroom.packman;
 
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
 
 /**
  *
  * @author Michael & Cato
  */
-public class Sprites {
+public class Sprites{
     private double posX, posY, speedX, speedY;
     private String id;
     // Setting up the array for the four directions of each characters.
@@ -50,6 +51,11 @@ public class Sprites {
      */
     public double getPosX(){
         return this.posX;
+    }
+    
+    public void setPosition(double x, double y){
+        this.posX = x;
+        this.posY = y;
     }
     
     /**
@@ -96,10 +102,7 @@ public class Sprites {
     }
     
     public void setGraphics(ImageView image){
-
-                this.baseGraphic = image;
-         
-        
+        this.baseGraphic = image;
     }
     
 }

@@ -33,6 +33,9 @@ public class Loader {
         4 ghost Blinky
     */
     
+    /**
+     *
+     */
     public void writeFirstLevel(){
         try {
             File firstLevel = new File("first.txt");
@@ -53,7 +56,10 @@ public class Loader {
         }
     }
     
-    public void getFirstLevel(){
+    /**
+     *
+     */
+    public char[][] getFirstLevel(){
         char[][] level = new char[31][28];
         int pos = 0;
         try {
@@ -76,5 +82,8 @@ public class Loader {
             }
             System.out.println("");
         }
+        
+        return level;
     }
+    
 }

@@ -14,11 +14,16 @@ public class GameEngine extends TimerTask {
     int ticker = 1;
     boolean running = false;
     
-    
+    /**
+     *
+     */
     public GameEngine(){
         
     }
     
+    /**
+     *
+     */
     public void stop(){
         this.running = false;
     }

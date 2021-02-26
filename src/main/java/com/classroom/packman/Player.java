@@ -5,19 +5,63 @@
  */
 package com.classroom.packman;
 
+import java.io.File;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 /**
  *
  * @author ylvar
  */
-public class Player extends Sprites{
+public class Player extends Sprites {
+
     private int points, lives;
     String name;
-    
-    public Player(String name) {
+    private ImageView[] baseGraphic = new ImageView[4];
+    double width, height, posX, posY;
+
+    public Player(String name, double height, double width, double newPosX, double newPosY) {
         super();
         this.name = name;
         this.points = 0;
         this.lives = 3;
+        this.width = width;
+        this.height = height;
+        this.posX = newPosX;
+        this.posY = newPosY;
+        try {
+            File packmanLeft = new File("pacmanLeft.gif");
+            File packmanRight = new File("pacmanRight.gif");
+            File packmanUp = new File("pacmanUp.gif");
+            File packmanDown = new File("pacmanDown.gif");
+            if (packmanLeft.exists()){
+               Image packmanImageLeft = new Image(packmanLeft.toURI().toString());
+               this.baseGraphic[0] = new ImageView(packmanImageLeft);
+            }
+            if (packmanRight.exists()){
+               Image packmanImageRight = new Image(packmanRight.toURI().toString());
+               this.baseGraphic[1] = new ImageView(packmanImageRight);
+            }
+            if (packmanUp.exists()){
+               Image packmanImageUp = new Image(packmanUp.toURI().toString());
+               this.baseGraphic[3] = new ImageView(packmanImageUp);
+            }
+            if (packmanDown.exists()){
+               Image packmanImageDown = new Image(packmanDown.toURI().toString());
+               this.baseGraphic[4] = new ImageView(packmanImageDown);
+            }
+        } catch (Exception E) {
+            System.out.println(E);
+        }
+
     }
     
+    public ImageView getGraphics(int direction){
+        this.baseGraphic[direction].setFitHeight(this.height);
+        this.baseGraphic[direction].setFitWidth(this.width);
+        this.baseGraphic[direction].setTranslateX(this.posX);
+        this.baseGraphic[direction].setTranslateY(this.posY);
+        return this.baseGraphic[direction];
+    }
+
 }
