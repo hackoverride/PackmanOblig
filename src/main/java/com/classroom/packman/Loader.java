@@ -5,9 +5,11 @@
  */
 package com.classroom.packman;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Scanner;
 
 /**
  *
@@ -35,10 +37,44 @@ public class Loader {
         try {
             File firstLevel = new File("first.txt");
             PrintWriter print = new PrintWriter(firstLevel);
-            print.print("Hello!");
+            for (int i = 0; i < 31; i++){
+                for (int j = 0; j < 28; j++){
+                    if (j == 27){
+                        print.println('X');
+                    } else {
+                        print.print('X');
+                    }
+                    
+                }
+            }
             print.close();
         } catch (IOException e){
             System.out.println(e);
+        }
+    }
+    
+    public void getFirstLevel(){
+        char[][] level = new char[31][28];
+        int pos = 0;
+        try {
+            File firstLevel = new File("first.txt");
+            if (firstLevel.exists()){
+                System.out.println("File ok");
+            }
+            Scanner les = new Scanner(firstLevel);
+            while(les.hasNextLine()){
+                String line = les.nextLine();
+                level[pos++] = line.toCharArray();
+            }
+        } catch (Exception e){
+            System.out.println(e);
+        }
+        
+        for (int i = 0; i < level.length; i++){
+            for (int j = 0; j < level[i].length; j++){
+                System.out.print(level[i][j]);
+            }
+            System.out.println("");
         }
     }
 }

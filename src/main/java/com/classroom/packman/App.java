@@ -45,7 +45,7 @@ public class App extends Application {
         Loader load = new Loader();
         menuButn_play.setOnAction((event) -> {
             System.out.println("play");
-            load.writeFirstLevel();
+            load.getFirstLevel();
         });
         
     }
