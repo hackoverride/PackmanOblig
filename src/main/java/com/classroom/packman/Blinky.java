@@ -25,11 +25,18 @@ public class Blinky extends Sprites{
                redImageView.setFitWidth(width);
                redImageView.setTranslateX(newPosX);
                redImageView.setTranslateY(newPosY);
-               super.setGraphics(redImageView);
+               this.setGraphics(redImageView);
             }
         } catch (Exception e){
             System.out.println(e);
         }
         
+    }
+    
+    public void moveBlinky(double newPosX, double newPosY){
+        ImageView redImageView = this.getGraphics();
+        redImageView.setTranslateX(newPosX);
+        redImageView.setTranslateY(newPosY);
+        this.setGraphics(redImageView);
     }
 }

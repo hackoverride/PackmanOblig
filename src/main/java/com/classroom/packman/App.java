@@ -5,7 +5,6 @@ import java.util.TimerTask;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -20,8 +19,8 @@ import javafx.scene.layout.HBox;
 
 public class App extends Application {
     
-    final int HEIGHT = 800;
-    final int WIDTH = (int)(HEIGHT * 1.618);
+    final int HEIGHT = 900;
+    final int WIDTH = HEIGHT;
     Scene scene;
     
     /**
@@ -34,9 +33,8 @@ public class App extends Application {
         mainWindow.setStyle("-fx-background-color: #000;");
         // setting the mainWindow to the scene first.
         HBox menu_container = new HBox(30);
-        Button menuButn_play = new Button("Play");
         Label score = new Label("Total Score: ");
-        menu_container.getChildren().addAll(menuButn_play, score);
+        menu_container.getChildren().addAll(score);
         mainWindow.setTop(menu_container);
         
         // testing out images
@@ -50,10 +48,16 @@ public class App extends Application {
         Render playBoard = new Render();
         playBoard.setStyle("-fx-background-color: #232323");
         /* Handle */
+        
+        GameEngine engine = new GameEngine(playBoard);
+        playBoard.draw(HEIGHT, WIDTH);
+        Player pacman = playBoard.getPlayer();
+        mainWindow.setCenter(playBoard); 
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case A: 
                     System.out.println("left");
+                    engine.run();
                     break;
                 case S:
                     System.out.println("down");
@@ -68,14 +72,6 @@ public class App extends Application {
                     System.out.println("default");
                     break;
             }
-        });
-        mainWindow.setCenter(playBoard);
-        Timer tid = new Timer();
-        TimerTask ge = new GameEngine();
-        tid.schedule(ge, 0, 500);
-        menuButn_play.setOnAction((event) -> {
-            System.out.println("play");
-            playBoard.draw(this.HEIGHT - 100, this.WIDTH);
         });
     }
 

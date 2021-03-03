@@ -44,11 +44,11 @@ public class Player extends Sprites {
             }
             if (packmanUp.exists()){
                Image packmanImageUp = new Image(packmanUp.toURI().toString());
-               this.baseGraphic[3] = new ImageView(packmanImageUp);
+               this.baseGraphic[2] = new ImageView(packmanImageUp);
             }
             if (packmanDown.exists()){
                Image packmanImageDown = new Image(packmanDown.toURI().toString());
-               this.baseGraphic[4] = new ImageView(packmanImageDown);
+               this.baseGraphic[3] = new ImageView(packmanImageDown);
             }
         } catch (Exception E) {
             System.out.println(E);
@@ -62,6 +62,22 @@ public class Player extends Sprites {
         this.baseGraphic[direction].setTranslateX(this.posX);
         this.baseGraphic[direction].setTranslateY(this.posY);
         return this.baseGraphic[direction];
+    }
+    
+    public void setGraphics(int direction, ImageView iv) {
+        try {
+            this.baseGraphic[direction] = iv;
+        } catch (IndexOutOfBoundsException e){
+            System.out.println("index out of bound");
+        }
+        
+    }
+    
+    public void movePacman(double newPosX, double newPosY, int direction){
+        ImageView pacman = this.getGraphics(direction);
+        pacman.setTranslateX(newPosX);
+        pacman.setTranslateY(newPosY);
+        this.setGraphics(direction, pacman);
     }
 
 }

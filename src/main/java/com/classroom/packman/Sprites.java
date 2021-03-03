@@ -13,6 +13,7 @@ import javafx.scene.shape.Rectangle;
  */
 public class Sprites{
     private double posX, posY, speedX, speedY;
+    private int levelPosX, levelPosY;
     private String id;
     // Setting up the array for the four directions of each characters.
     private ImageView baseGraphic;
@@ -53,7 +54,22 @@ public class Sprites{
         return this.posX;
     }
     
+    public void setLevelPosition(int x, int y){
+        // Here we handle where the Sprite is on the level char[][]
+            this.levelPosX = x;
+            this.levelPosY = y;
+    }
+    
+    public int getLevelPositionX(){
+        return this.levelPosX;
+    }
+    
+    public int getLevelPositionY(){
+        return this.levelPosY;
+    }
+    
     public void setPosition(double x, double y){
+        // Here we handle the graphical position of the gif.
         this.posX = x;
         this.posY = y;
     }

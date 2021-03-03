@@ -1,4 +1,3 @@
-
 package com.classroom.packman;
 
 import java.util.ArrayList;
@@ -11,58 +10,63 @@ import javafx.scene.shape.Rectangle;
  *
  * @author Michael og Cato
  */
-public class Render extends Pane{
+public class Render extends Pane {
     // Handle all rendering here.
-    
+
     Loader load = new Loader();
     private char[][] currentLevel = load.getFirstLevel();
-    private double height, width;
     private ArrayList<Circle> points = new ArrayList<>();
-    private ArrayList<Rectangle> walls  = new ArrayList<>();
+    private ArrayList<Rectangle> walls = new ArrayList<>();
     private ArrayList<Circle> powerups = new ArrayList<>();
-    private Pane[] ghosts = new Pane[1];
     private Blinky blinky;
     private Player pacman;
-    
-    
-    
-    public void draw(int height, int width){
+    /* The under are not private as we use them as globals */
+    double sectionWide, sectionHigh;
+    double HEIGHT, WIDTH;
+
+    public void draw(int height, int width) {
         // drawing the map and sprites
         /* 
         *   Load char levels
         *   Use Circles for points and rectangular shapes for walls and ghosts and pacmans.
-        */
-        double sectionWide = (width / currentLevel.length);
-        double sectionHigh = (height / currentLevel[0].length);      
-        System.out.println("block: " + sectionWide + " " + sectionHigh);
-        for (int i = 0; i < currentLevel.length; i++){
-            for (int j = 0; j < currentLevel[i].length; j++){
-                
+         */
+        this.HEIGHT = (double) height;
+        this.WIDTH = (double) width;
+        double sectionWide = (WIDTH / currentLevel[0].length);
+        this.sectionWide = sectionWide;
+        double sectionHigh = (HEIGHT / currentLevel.length);
+        this.sectionHigh = sectionHigh;
+        for (int i = 0; i < currentLevel.length; i++) {
+            
+            for (int j = 0; j < currentLevel[i].length; j++) {
+
                 double posx = (sectionWide / 2) + (sectionWide * j);
-                
-                double posy = (sectionHigh /2) + (sectionHigh * i);
-                
-                switch (currentLevel[i][j]){
+
+                double posy = (sectionHigh / 2) + (sectionHigh * i);
+
+                switch (currentLevel[i][j]) {
                     case 'X':
-                        walls.add(new Rectangle((j*sectionWide), (i * sectionHigh), sectionWide, sectionHigh));
-                        walls.get(walls.size() -1).setFill(Color.GREEN);
+                        walls.add(new Rectangle((j * sectionWide), (i * sectionHigh), sectionWide, sectionHigh));
+                        walls.get(walls.size() - 1).setFill(Color.GREEN);
                         break;
                     case 'O':
-                        System.out.println("");
+                        // blanks
                         break;
                     case 'P':
                         points.add(new Circle(posx, posy, 2));
-                        points.get(points.size() -1).setFill(Color.WHITE);
+                        points.get(points.size() - 1).setFill(Color.WHITE);
                         break;
                     case '-':
                         powerups.add(new Circle(posx, posy, 5));
-                        powerups.get(powerups.size() -1).setFill(Color.TEAL);
+                        powerups.get(powerups.size() - 1).setFill(Color.TEAL);
                         break;
                     case '1':
-                        blinky = new Blinky(sectionHigh, sectionWide, (j*sectionWide), (i * sectionHigh));
+                        blinky = new Blinky(sectionHigh, sectionWide, (j * sectionWide), (i * sectionHigh));
+                        //blinky.setLevelPosition(j, i);
                         break;
                     case 'S':
-                        pacman = new Player("Player1", sectionHigh, sectionWide, (j*sectionWide), (i * sectionHigh));
+                        pacman = new Player("Player1", sectionHigh, sectionWide, (j * sectionWide), (i * sectionHigh));
+                        //pacman.setLevelPosition(j, i);
                     default:
                         break;
                 }
@@ -74,6 +78,14 @@ public class Render extends Pane{
         this.getChildren().addAll(powerups);
         this.getChildren().addAll(blinky.getGraphics());
         this.getChildren().addAll(pacman.getGraphics(0));
+    }
+    
+    public Player getPlayer(){
+        return this.pacman;
+    }
+    
+    public void render(){
+        this.getChildren().clear();
     }
 }
 /*
