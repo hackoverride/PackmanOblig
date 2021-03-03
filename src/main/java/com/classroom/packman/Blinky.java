@@ -15,6 +15,8 @@ import javafx.scene.image.ImageView;
  */
 public class Blinky extends Sprites{
     
+    boolean returnHome = false;
+    
     public Blinky(double height, double width, double newPosX, double newPosY) {
         try{
             File redGhost = new File("redghost.gif");
@@ -30,7 +32,14 @@ public class Blinky extends Sprites{
         } catch (Exception e){
             System.out.println(e);
         }
-        
+    }
+    
+    public void returnHome(){
+        this.returnHome = true;
+    }
+    
+    public boolean isReturningHome(){
+        return this.returnHome;
     }
     
     public void moveBlinky(double newPosX, double newPosY){

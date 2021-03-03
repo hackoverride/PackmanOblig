@@ -33,8 +33,11 @@ public class App extends Application {
         mainWindow.setStyle("-fx-background-color: #000;");
         // setting the mainWindow to the scene first.
         HBox menu_container = new HBox(30);
-        Label score = new Label("Total Score: ");
-        menu_container.getChildren().addAll(score);
+        Label score = new Label("Score: ");
+        score.setStyle("-fx-text-fill: #FFF; -fx-font-size: 16px;");
+        Label lives = new Label("Lives: ");
+        lives.setStyle("-fx-text-fill: #FFF; -fx-font-size: 16px;");
+        menu_container.getChildren().addAll(score, lives);
         mainWindow.setTop(menu_container);
         
         // testing out images
@@ -54,24 +57,33 @@ public class App extends Application {
         Player pacman = playBoard.getPlayer();
         mainWindow.setCenter(playBoard); 
         scene.setOnKeyPressed(e -> {
+            // starting the gameengine as soon as the player pushes the first key :)
+            if (!engine.isRunning()){
+                 engine.run();
+               }
             switch (e.getCode()) {
                 case A: 
                     System.out.println("left");
-                    engine.run();
+                    playBoard.movePlayer(0);
                     break;
                 case S:
                     System.out.println("down");
+                    playBoard.movePlayer(3);
                     break;
                 case D:
                     System.out.println("right");
+                    playBoard.movePlayer(1);
                     break;
                 case W:
                     System.out.println("up");
+                    playBoard.movePlayer(2);
                     break;
                 default:
                     System.out.println("default");
                     break;
             }
+            score.setText("Score: " + pacman.getPoints());
+            lives.setText("Lives: " + pacman.getLives());
         });
     }
 

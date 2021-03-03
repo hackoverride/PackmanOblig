@@ -15,10 +15,12 @@ import javafx.scene.image.ImageView;
  */
 public class Player extends Sprites {
 
-    private int points, lives;
+    private int points, lives, activeDirection;
     String name;
     private ImageView[] baseGraphic = new ImageView[4];
     double width, height, posX, posY;
+    boolean powered = false;
+    
 
     public Player(String name, double height, double width, double newPosX, double newPosY) {
         super();
@@ -29,6 +31,7 @@ public class Player extends Sprites {
         this.height = height;
         this.posX = newPosX;
         this.posY = newPosY;
+        this.activeDirection = 0; // Always start heading left.
         try {
             File packmanLeft = new File("pacmanLeft.gif");
             File packmanRight = new File("pacmanRight.gif");
@@ -56,12 +59,42 @@ public class Player extends Sprites {
 
     }
     
-    public ImageView getGraphics(int direction){
-        this.baseGraphic[direction].setFitHeight(this.height);
-        this.baseGraphic[direction].setFitWidth(this.width);
-        this.baseGraphic[direction].setTranslateX(this.posX);
-        this.baseGraphic[direction].setTranslateY(this.posY);
-        return this.baseGraphic[direction];
+    public int getLives(){
+        return this.lives;
+    }
+    
+    public void removeLife(){
+        if (this.lives <= 1){
+            //game over
+        } else {
+            this.lives--;
+        }
+    }
+    
+    public void updatePoints(){
+        this.points++;
+    }
+    
+    public int getPoints(){
+        return this.points;
+    }
+    
+    public void powerup(){
+        this.powered = true;
+    }
+    
+    public boolean checkPower(){
+        return this.powered;
+    }
+    
+    public ImageView getGraphics(){
+        this.baseGraphic[activeDirection].setFitHeight(this.height);
+        this.baseGraphic[activeDirection].setFitWidth(this.width);
+        return this.baseGraphic[activeDirection];
+    }
+    
+    public void setDirection(int i){
+        this.activeDirection = i;
     }
     
     public void setGraphics(int direction, ImageView iv) {
@@ -73,11 +106,11 @@ public class Player extends Sprites {
         
     }
     
-    public void movePacman(double newPosX, double newPosY, int direction){
-        ImageView pacman = this.getGraphics(direction);
+    public void movePacman(double newPosX, double newPosY){
+        ImageView pacman = this.getGraphics();
         pacman.setTranslateX(newPosX);
         pacman.setTranslateY(newPosY);
-        this.setGraphics(direction, pacman);
+        this.setGraphics(activeDirection, pacman);
     }
 
 }
