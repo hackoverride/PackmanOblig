@@ -18,6 +18,7 @@ public class Render extends Pane {
     private ArrayList<Circle> points = new ArrayList<>();
     private ArrayList<Rectangle> walls = new ArrayList<>();
     private ArrayList<Circle> powerups = new ArrayList<>();
+    private int ticker = 0;
     private Blinky blinky;
     private Player pacman;
     /* The under are not private as we use them as globals */
@@ -37,7 +38,7 @@ public class Render extends Pane {
         double sectionHigh = (HEIGHT / currentLevel.length);
         this.sectionHigh = sectionHigh;
         for (int i = 0; i < currentLevel.length; i++) {
-            
+
             for (int j = 0; j < currentLevel[i].length; j++) {
 
                 double posx = (sectionWide / 2) + (sectionWide * j);
@@ -67,7 +68,7 @@ public class Render extends Pane {
                     case 'S':
                         pacman = new Player("Player1", sectionHigh, sectionWide, (j * sectionWide), (i * sectionHigh));
                         pacman.setLevelPosition(j, i);
-                        //pacman.setLevelPosition(j, i);
+                    //pacman.setLevelPosition(j, i);
                     default:
                         break;
                 }
@@ -80,91 +81,185 @@ public class Render extends Pane {
         this.getChildren().addAll(blinky.getGraphics());
         this.getChildren().addAll(pacman.getGraphics());
     }
-    
-    public Player getPlayer(){
+
+    public Player getPlayer() {
         return this.pacman;
     }
-    
-    public void ghostLogic(){
+
+    public void ghostLogic() {
         // Blinky!
-        removeCharFromLevel('1', 'O');
-        int pacX = pacman.getLevelPositionX();
-        int pacY = pacman.getLevelPositionY();
-        int tempX = blinky.getLevelPositionX();
-        int tempY = blinky.getLevelPositionY();
-        
-        // Always move towards the player !
-        char left, right, up, down;
-        left = currentLevel[tempY][tempX -1];
-        right = currentLevel[tempY][tempX +1];
-        up = currentLevel[tempY -1][tempX];
-        down = currentLevel[tempY +1][tempX];
-        
-        /* Need to make this logic way much better! */
-        
-        if (pacX > tempX){
-            if (right != 'X'){
-                tempX++;
-            }
-        } else if (pacX < tempX){
-            if (left != 'X'){
-                tempX--;
-            }
-        } else if (pacY < tempY){
-            if (up != 'X'){
+        this.ticker++;
+        if (ticker > 4) {
+            this.ticker = 0;
+            removeCharFromLevel('1', 'O');
+            int pacX = pacman.getLevelPositionX();
+            int pacY = pacman.getLevelPositionY();
+            int tempX = blinky.getLevelPositionX();
+            int tempY = blinky.getLevelPositionY();
+
+            //checkin the last five moves
+            int[][] lastMoves = blinky.getLastMoves();
+            blinky.setLastMove(tempX, tempY);
+
+            // blinky needs to move towards pacman but default would be up first.
+            if (tempX == 12 && tempY == 11) {
+                // were at start. move up!
                 tempY--;
+            } else if (tempX <= 13 && tempY == 12 || tempX >= 11 && tempY == 12) {
+                // ghost is inside the safezone.
+                // add a wait?
+                if (blinky.waitedLongEnough()) {
+                    tempX = 12;
+                    tempY = 11;
+                } else {
+                    blinky.waitTicker();
+                }
+            } else {
+                // main logic.
+                if (pacY > tempY) {
+                    // pacman is down
+                    if (currentLevel[tempY + 1][tempX] != 'X') {
+                        if (lastMoves[4][0] != tempY + 1 && lastMoves[4][1] != tempX) {
+                            // dont want to go back where we were?
+                            tempY++;
+                        } else {
+                            if (currentLevel[tempY][tempX - 1] != 'X') {
+                                if (currentLevel[tempY][tempX - 1] != 'E') {
+                                    tempX--;
+                                } else {
+                                    // no wall but exit - move other direction.
+                                    tempX++;
+                                }
+                            }
+                        }
+                    } else {
+                        // Pacman is downwards but wall is down aswell..
+                        if (pacX > tempX) {
+                            if (currentLevel[tempY][tempX + 1] != 'X') {
+                                if ((currentLevel[tempY][tempX + 1] != 'E')) {
+                                    tempX++;
+                                }
+                            } else {
+                                // pacman is up, but the wall is there and the wall is to the right.
+                                if (currentLevel[tempY][tempX - 1] != 'X') {
+                                    if ((currentLevel[tempY][tempX - 1] != 'E')) {
+                                        tempX--;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    // pacman would be the same Y level or lower down on board.
+                    if (pacY == tempY) {
+                        if (pacX > tempX) {
+                            //same Y axis but to the right.
+                            if (currentLevel[tempY][tempX + 1] != 'X') {
+                                if (currentLevel[tempY][tempX + 1] != 'E') {
+                                    tempX++;
+                                } else {
+                                    tempX = lastMoves[4][1];
+                                }
+                            } else {
+                                // pacman is on the same Y axis and towards the right
+                                // but there is a wall to the right.
+                                if (currentLevel[tempY + 1][tempX] != 'X') {
+                                    tempY++;
+                                } else if (currentLevel[tempY - 1][tempX] != 'X') {
+                                    tempY--;
+                                }
+                            }
+                        }
+                    } else {
+                        // the pac is lower!
+                        if (currentLevel[tempY + 1][tempX] != 'X') {
+                            if (lastMoves[4][0] != tempY + 1 && lastMoves[4][1] != tempX){
+                                tempY++;
+                            } else {
+                                if (pacX < tempX){
+                                    if (currentLevel[tempY][tempX -1] != 'X'){
+                                        if (currentLevel[tempY][tempX -1] != 'E'){
+                                        tempX--;
+                                    } else {
+                                            tempX++;
+                                        }
+                                    } else {
+                                        if (currentLevel[tempY][tempX + 1] != 'X'){
+                                            if (currentLevel[tempY][tempX + 1] != 'E'){
+                                        tempX++;
+                                    }
+                                        
+                                    }
+                                    }
+                                }
+                            }
+                            
+                        } else {
+                            //pacman is lower on the board but wall is down
+                            if (pacX > tempX) {
+                                if (currentLevel[tempY][tempX + 1] != 'X') {
+                                    if (currentLevel[tempY][tempX + 1] != 'E') {
+                                        tempX++;
+
+                                    }
+                                }
+
+                            } else {
+                                if (currentLevel[tempY][tempX - 1] != 'X') {
+                                    if (currentLevel[tempY][tempX - 1] != 'E') {
+                                        tempX--;
+                                    }
+                                }
+
+                            }
+
+                        }
+                    }
+                }
             }
-        } else if (pacY > tempY){
-            if (down != 'X'){
-                tempY++;
-            } else if (left != 'x'){
-                tempX--;
-            } else if (right != 'X'){
-                tempX++;
-            }
-        } else {
-            // 
-            if (left != 'W'){
-                tempX--;
-            }
+
+            System.out.println(tempX);
+            System.out.println(tempY);
+
+            blinky.setLevelPosition(tempX, tempY);
+            currentLevel[tempY][tempX] = '1';
+            //movePlayer(pacman.getActiveDirection());
+
         }
-        
-        blinky.setLevelPosition(tempX, tempY);
-        currentLevel[tempY][tempX] = '1';
     }
-    
-    public void movePlayer(int direction){
+
+    public void movePlayer(int direction) {
         // 0 = left, 1 = right, 2 = up, 3 = down
         // player = 'S'.
         removeCharFromLevel('S', 'O');
         int tempX = pacman.getLevelPositionX();
         int tempY = pacman.getLevelPositionY();
-        
+
         switch (direction) {
             case 0:
                 // moving left
-                if (currentLevel[tempY][tempX - 1] != 'X'){
+                if (currentLevel[tempY][tempX - 1] != 'X') {
                     tempX--;
                 }
                 pacman.setDirection(0);
                 break;
             case 1:
                 // moving right
-                if (currentLevel[tempY][tempX + 1] != 'X'){
+                if (currentLevel[tempY][tempX + 1] != 'X') {
                     tempX++;
                 }
                 pacman.setDirection(1);
                 break;
-            case 2: 
+            case 2:
                 // moving up
-                if (currentLevel[tempY - 1][tempX] != 'X'){
+                if (currentLevel[tempY - 1][tempX] != 'X') {
                     tempY--;
                 }
                 pacman.setDirection(2);
                 break;
             case 3:
                 // moving down
-                if (currentLevel[tempY + 1][tempX] != 'X'){
+                if (currentLevel[tempY + 1][tempX] != 'X') {
                     tempY++;
                 }
                 pacman.setDirection(3);
@@ -173,36 +268,35 @@ public class Render extends Pane {
                 break;
         }
         char currentValue = currentLevel[tempY][tempX];
-        if (currentValue == 'P'){
+        if (currentValue == 'P') {
             pacman.updatePoints();
         }
-        if (currentValue == '-'){
+        if (currentValue == '-') {
             pacman.powerup();
         }
         currentLevel[tempY][tempX] = 'S';
         pacman.setLevelPosition(tempX, tempY);
     }
-    
-    public void removeCharFromLevel(char remove, char add){
-        for (int i = 0; i < currentLevel.length; i++){
-            for (int j = 0; j < currentLevel[i].length; j++){
-                if (currentLevel[i][j] == remove){
+
+    public void removeCharFromLevel(char remove, char add) {
+        for (int i = 0; i < currentLevel.length; i++) {
+            for (int j = 0; j < currentLevel[i].length; j++) {
+                if (currentLevel[i][j] == remove) {
                     // blank out
                     currentLevel[i][j] = add;
                 }
             }
         }
     }
-    
-    public void render(){
-        
+
+    public void render() {
+
         // adding ghosts, points, powerups and pacman
         // Walls and spaces are not going anywere
-        
         points.clear();
         powerups.clear();
         for (int i = 0; i < currentLevel.length; i++) {
-            
+
             for (int j = 0; j < currentLevel[i].length; j++) {
 
                 double posx = (sectionWide / 2) + (sectionWide * j);
@@ -229,10 +323,7 @@ public class Render extends Pane {
                 }
             }
         }
-        
-        
-        
-        
+
         this.getChildren().clear();
         this.getChildren().addAll(walls);
         this.getChildren().addAll(points);
@@ -241,4 +332,3 @@ public class Render extends Pane {
         this.getChildren().addAll(pacman.getGraphics());
     }
 }
-

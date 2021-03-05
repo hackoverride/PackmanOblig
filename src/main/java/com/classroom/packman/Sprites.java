@@ -13,11 +13,15 @@ import javafx.scene.shape.Rectangle;
  */
 public class Sprites{
     private double posX, posY, speedX, speedY;
+    // hold onto the last five moves.
+    private int[][] lastMoves = new int[5][2];
     private int levelPosX, levelPosY;
     private String id;
     // Setting up the array for the four directions of each characters.
     private ImageView baseGraphic;
     private double size = 10.0;
+    // for ghost to wait before leaving 'safezone'
+    private int waitTicker = 0;
     
     Sprites(){
         this.posX = 0;
@@ -52,6 +56,35 @@ public class Sprites{
      */
     public double getPosX(){
         return this.posX;
+    }
+    
+    public int[][] getLastMoves() {
+        return this.lastMoves;
+    }
+    
+    public void waitTicker() {
+        this.waitTicker++;
+    }
+    
+    public boolean waitedLongEnough(){
+        if (this.waitTicker >= 10){
+            this.waitTicker = 0;
+            return true;
+        }
+        return false;
+    }
+    
+    public void setLastMove(int x, int y){
+        // update the lastMoves array.
+        int[][] temp = new int[5][2];
+        for (int i = 0; i < 4; i++){
+            temp[i][0] = this.lastMoves[i+1][0];
+            temp[i][1] = this.lastMoves[i+1][1];
+        }
+            temp[4][0] = x;
+            temp[4][1] = y;
+            
+            this.lastMoves = temp;
     }
     
     public void setLevelPosition(int x, int y){

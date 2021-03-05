@@ -56,7 +56,13 @@ public class Player extends Sprites {
         } catch (Exception E) {
             System.out.println(E);
         }
+        
+        movePacman(posX, posY);
 
+    }
+    
+    public int getActiveDirection(){
+        return this.activeDirection;
     }
     
     public int getLives(){

@@ -40,8 +40,7 @@ public class GameEngine {
         this.running = true;
         //playBoard.draw(this.HEIGHT - 20, this.WIDTH);
         Timeline timeline = new Timeline();
-        KeyFrame keys = new KeyFrame(Duration.millis(500), e -> {
-            System.out.println("ticker: " + ticker++);
+        KeyFrame keys = new KeyFrame(Duration.millis(100), e -> {
             playBoard.ghostLogic();
             playBoard.render();
         });
