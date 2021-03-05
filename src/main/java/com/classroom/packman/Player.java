@@ -11,7 +11,7 @@ import javafx.scene.image.ImageView;
 
 /**
  *
- * @author ylvar
+ * @author Michael og Cato
  */
 public class Player extends Sprites {
 

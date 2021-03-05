@@ -64,19 +64,19 @@ public class App extends Application {
             switch (e.getCode()) {
                 case A: 
                     System.out.println("left");
-                    playBoard.movePlayer(0);
+                    pacman.setDirection(0);
                     break;
                 case S:
                     System.out.println("down");
-                    playBoard.movePlayer(3);
+                    pacman.setDirection(3);
                     break;
                 case D:
                     System.out.println("right");
-                    playBoard.movePlayer(1);
+                    pacman.setDirection(1);
                     break;
                 case W:
                     System.out.println("up");
-                    playBoard.movePlayer(2);
+                    pacman.setDirection(2);
                     break;
                 default:
                     System.out.println("default");

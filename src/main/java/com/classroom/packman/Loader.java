@@ -37,6 +37,7 @@ public class Loader {
      *
      */
     public void writeFirstLevel(){
+        // we just used this to create the first template.
         try {
             File firstLevel = new File("first.txt");
             PrintWriter print = new PrintWriter(firstLevel);
@@ -72,17 +73,40 @@ public class Loader {
                 String line = les.nextLine();
                 level[pos++] = line.toCharArray();
             }
+            les.close();
         } catch (Exception e){
             System.out.println(e);
         }
         
+        /*
         for (int i = 0; i < level.length; i++){
             for (int j = 0; j < level[i].length; j++){
                 System.out.print(level[i][j]);
             }
             System.out.println("");
         }
+        */
         
+        return level;
+    }
+    
+    public char[][] getSecondLevel(){
+        char[][] level = new char[31][28];
+        int pos = 0;
+        try {
+            File secondLevel = new File("second.txt");
+            if (secondLevel.exists()){
+                System.out.println("File ok");
+            }
+            Scanner les = new Scanner(secondLevel);
+            while(les.hasNextLine()){
+                String line = les.nextLine();
+                level[pos++] = line.toCharArray();
+            }
+            les.close();
+        } catch (Exception e){
+            System.out.println(e);
+        }
         return level;
     }
     

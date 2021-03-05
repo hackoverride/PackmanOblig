@@ -22,6 +22,7 @@ public class Sprites{
     private double size = 10.0;
     // for ghost to wait before leaving 'safezone'
     private int waitTicker = 0;
+    private char lastChar = 'O';
     
     Sprites(){
         this.posX = 0;
@@ -56,6 +57,14 @@ public class Sprites{
      */
     public double getPosX(){
         return this.posX;
+    }
+    
+    public void setLastChar(char c){
+        this.lastChar = c;
+    }
+    
+    public char getLastChar(){
+        return this.lastChar;
     }
     
     public int[][] getLastMoves() {
