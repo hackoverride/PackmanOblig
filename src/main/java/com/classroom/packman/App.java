@@ -50,8 +50,6 @@ public class App extends Application {
         stage.show();
         Render playBoard = new Render();
         playBoard.setStyle("-fx-background-color: #232323");
-        /* Handle */
-        
         GameEngine engine = new GameEngine(playBoard);
         playBoard.draw(HEIGHT, WIDTH);
         Player pacman = playBoard.getPlayer();
