@@ -38,6 +38,10 @@ public class Blinky extends Sprites{
         this.returnHome = true;
     }
     
+    public void readyForAction(){
+        this.returnHome = false;
+    }
+    
     public boolean isReturningHome(){
         return this.returnHome;
     }

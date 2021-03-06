@@ -1,7 +1,5 @@
 package com.classroom.packman;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -59,19 +57,25 @@ public class App extends Application {
             if (!engine.isRunning()){
                  engine.run();
                }
+            
+            //System.out.println(e.getCode());
             switch (e.getCode()) {
+                case LEFT:
                 case A: 
                     System.out.println("left");
                     pacman.setDirection(0);
                     break;
+                case DOWN:
                 case S:
                     System.out.println("down");
                     pacman.setDirection(3);
                     break;
+                case RIGHT:
                 case D:
                     System.out.println("right");
                     pacman.setDirection(1);
                     break;
+                case UP:
                 case W:
                     System.out.println("up");
                     pacman.setDirection(2);

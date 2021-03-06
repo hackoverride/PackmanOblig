@@ -13,6 +13,7 @@ import javafx.scene.shape.Rectangle;
  */
 public class Sprites{
     private double posX, posY, speedX, speedY;
+    private int[] startPosition = new int[2];
     private int levelPosX, levelPosY;
     private String id;
     // Setting up the array for the four directions of each characters.
@@ -56,6 +57,15 @@ public class Sprites{
         return this.posX;
     }
     
+    public void setStartPosition(int x, int y){
+        this.startPosition[0] = y;
+        this.startPosition[1] = x;
+    }
+    
+    public int[] getStartPosition() {
+        return this.startPosition;
+    }
+    
     public void setLastChar(char c){
         this.lastChar = c;
     }
@@ -70,7 +80,7 @@ public class Sprites{
     }
     
     public boolean waitedLongEnough(){
-        if (this.waitTicker >= 10){
+        if (this.waitTicker >= 14){
             this.waitTicker = 0;
             return true;
         }

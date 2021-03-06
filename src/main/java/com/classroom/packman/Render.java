@@ -68,15 +68,21 @@ public class Render extends Pane {
                     case '1':
                         blinky = new Blinky(sectionHigh, sectionWide, (j * sectionWide), (i * sectionHigh));
                         blinky.setLevelPosition(j, i);
+                        blinky.setStartPosition(j, i);
+                        blinky.returnHome();
                         break;
                     case 'S':
                         pacman = new Player("Player1", sectionHigh, sectionWide, (j * sectionWide), (i * sectionHigh));
                         pacman.setLevelPosition(j, i);
+                        pacman.setStartPosition(j, i);
                         break;
                     //pacman.setLevelPosition(j, i);
                     case '4':
                         clyde = new Clyde(sectionHigh, sectionWide, (j * sectionWide), (i * sectionHigh));
                         clyde.setLevelPosition(j, i);
+                        clyde.setStartPosition(j, i);
+                        clyde.returnHome();
+                        break;
                     default:
                         break;
                 }
@@ -99,11 +105,29 @@ public class Render extends Pane {
         // Blinky!
         this.ticker++;
         // dont move ghosts too quickly, but dont lag the render either.
+
         if (ticker > 3) {
+
+            if (clyde.isReturningHome()) {
+                // return clyde to homebase... And check wait-time.
+                if (clyde.waitedLongEnough()) {
+                    clyde.readyForAction();
+                } else {
+                    clyde.waitTicker();
+                }
+
+            }
+            if (blinky.isReturningHome()) {
+                if (blinky.waitedLongEnough()) {
+                    blinky.readyForAction();
+                } else {
+                    blinky.waitTicker();
+                }
+            }
+
             this.ticker = 0;
             // we always move player first.
             movePlayer(pacman.getActiveDirection());
-            removeCharFromLevel('1', blinky.getLastChar());
             int tempX = blinky.getLevelPositionX();
             int tempY = blinky.getLevelPositionY();
 
@@ -111,21 +135,29 @@ public class Render extends Pane {
             int[] bestPath = getBestMove(blinky);
             tempX = bestPath[1];
             tempY = bestPath[0];
-            blinky.setLevelPosition(tempX, tempY);
-            currentLevel[tempY][tempX] = '1';
-            
+            // Limit to no diagonal movement.
+            if (blinky.isReturningHome()) {
+                // blinky does not move.
+            } else {
+                removeCharFromLevel('1', blinky.getLastChar());
+                blinky.setLevelPosition(tempX, tempY);
+                blinky.setLastChar(currentLevel[tempY][tempX]);
+                currentLevel[tempY][tempX] = '1';
+            }
+
+
             /* CLYDE */
             tempX = clyde.getLevelPositionX();
             tempY = clyde.getLevelPositionY();
-            
+
             // Acconding to wiki clyde chase exactly like blinky, but retreats
             // when getting close. towards high Y and low X values.
             int distanceX = Math.abs(clyde.getLevelPositionX() - pacman.getLevelPositionX());
             int distanceY = Math.abs(clyde.getLevelPositionY() - pacman.getLevelPositionY());
-            if (distanceX < 4 || distanceY < 4){
-                if (currentLevel[tempY + 1][tempX] == 'X'){
+            if (distanceX < 4 || distanceY < 4) {
+                if (currentLevel[tempY + 1][tempX] == 'X') {
                     if (currentLevel[tempY][tempX - 1] == 'X') {
-                        if (currentLevel[tempY][tempX + 1] == 'X'){
+                        if (currentLevel[tempY][tempX + 1] == 'X') {
                             tempY--;
                         } else {
                             tempX++;
@@ -141,11 +173,15 @@ public class Render extends Pane {
                 tempX = bestPath[1];
                 tempY = bestPath[0];
             }
-            removeCharFromLevel('4', clyde.getLastChar());
-            clyde.setLevelPosition(tempX, tempY);
-           currentLevel[tempY][tempX] = '4';
-            
-            
+            if (clyde.isReturningHome()) {
+                // clyde dont move!
+            } else {
+                removeCharFromLevel('4', clyde.getLastChar());
+                clyde.setLevelPosition(tempX, tempY);
+                clyde.setLastChar(currentLevel[tempY][tempX]);
+                currentLevel[tempY][tempX] = '4';
+            }
+
         }
     }
 
@@ -166,40 +202,36 @@ public class Render extends Pane {
                 if (currentLevel[tempY][tempX - 1] != 'X') {
                     tempX--;
                 }
-                pacman.setDirection(0);
                 break;
             case 1:
                 // moving right
                 if (currentLevel[tempY][tempX + 1] != 'X') {
                     tempX++;
                 }
-                pacman.setDirection(1);
                 break;
             case 2:
                 // moving up
                 if (currentLevel[tempY - 1][tempX] != 'X') {
                     tempY--;
                 }
-                pacman.setDirection(2);
                 break;
             case 3:
                 // moving down
                 if (currentLevel[tempY + 1][tempX] != 'X') {
                     tempY++;
                 }
-                pacman.setDirection(3);
                 break;
             default:
                 break;
         }
         char currentValue = currentLevel[tempY][tempX];
+        int ascii = (int) currentValue;
+        System.out.println(ascii);
         if (currentValue == 'P') {
             pacman.updatePoints();
-        }
-        if (currentValue == '-') {
+        } else if (currentValue == '-') {
             pacman.powerup();
-        }
-        if (currentValue == 'E') {
+        } else if (currentValue == 'E') {
 
             // first check if we level up
             if (this.currentLevelMaxPoints == pacman.getPoints()) {
@@ -210,6 +242,36 @@ public class Render extends Pane {
                 tempX = currentLevel[0].length - 2;
             } else if (tempX >= currentLevel[0].length - 2) {
                 tempX = 1;
+            }
+        } else if (ascii >= 49 && ascii <= 52) {
+            // pacman is at same position as ghosts
+            if (pacman.checkPower()) {
+                System.out.println("ghost is dead");
+
+                switch (ascii) {
+                    case 49:
+                        blinky.returnHome();
+                        break;
+                    case 50:
+                        break;
+                    case 51:
+                        break;
+                    case 52:
+                        clyde.returnHome();
+                        break;
+                    default:
+                        break;
+                }
+
+            } else {
+                System.out.println("! dead ? !");
+                if (pacman.getLives() <= 1) {
+                    // pacman only has last life left. therefore gameover!
+
+                }
+                pacman.removeLife();
+                // Level reset position is always: X: 12 Y: 10 
+                pacman.setLevelPosition(12, 10);
             }
         }
 
@@ -257,8 +319,10 @@ public class Render extends Pane {
                         break;
                     case '4':
                         clyde.moveClyde((j * sectionWide), (i * sectionHigh));
+                        break;
                     case 'S':
                         pacman.movePacman((j * sectionWide), (i * sectionHigh));
+                        break;
                     default:
                         break;
                 }
@@ -303,27 +367,51 @@ public class Render extends Pane {
         }
         int[] bestPath = new int[2];
         int lowestValue = 10000;
+        int highestValue = 0;
         // find the closes position to blinky with the lowest total score.
         for (int i = 0; i < 3; i++) {
             int posY = blinkyPos[0] - 1 + i;
             for (int j = 0; j < 3; j++) {
                 int posX = blinkyPos[1] - 1 + j;
-                if ( isWall( posY,posX ) || i == 1 && j == 1 || currentLevel[posY][posX] == '2' || currentLevel[posY][posX] == '3' || currentLevel[posY][posX] == '4') {
-                    // score does not count. therefore ignored.
-                    // Clyde triggers on all accounts at start.
-                    if (j == 2 && i == 2 && lowestValue == 10000){
-                        bestPath[1] = blinkyPos[1] - 1;
-                        bestPath[0] = blinkyPos[0] - 1;
-                    }
+                // best move if pacman is powerd is to run away from pacman!
+                if (pacman.checkPower()) {
+                    if (isWall(posY, posX) || i == 1 && j == 1 || currentLevel[posY][posX] == '2' || currentLevel[posY][posX] == '3' || currentLevel[posY][posX] == '4') {
+                        // score does not count. therefore ignored.
+                        // Clyde triggers on all accounts at start.
 
+                        if (j == 2 && i == 2 && highestValue == 0) {
+                            bestPath[1] = blinkyPos[1] - 1;
+                            bestPath[0] = blinkyPos[0] - 1;
+                        }
+
+                    } else {
+                        //allocating the sum of nodeValues
+                        if (highestValue < (nodeValuesPac[posY][posX] + nodeValuesBlink[posY][posX])) {
+                            highestValue = (nodeValuesPac[posY][posX] + nodeValuesBlink[posY][posX]);
+                            bestPath[0] = posY;
+                            bestPath[1] = posX;
+                        }
+                    }
                 } else {
-                    //allocating the sum of nodeValues
-                    if (lowestValue > (nodeValuesPac[posY][posX] + nodeValuesBlink[posY][posX])) {
-                        lowestValue = (nodeValuesPac[posY][posX] + nodeValuesBlink[posY][posX]);
-                        bestPath[0] = posY;
-                        bestPath[1] = posX;
+                    if (isWall(posY, posX) || i == 1 && j == 1 || currentLevel[posY][posX] == '2' || currentLevel[posY][posX] == '3' || currentLevel[posY][posX] == '4') {
+                        // score does not count. therefore ignored.
+                        // Clyde triggers on all accounts at start.
+
+                        if (j == 2 && i == 2 && lowestValue == 10000) {
+                            bestPath[1] = blinkyPos[1] - 1;
+                            bestPath[0] = blinkyPos[0] - 1;
+                        }
+
+                    } else {
+                        //allocating the sum of nodeValues
+                        if (lowestValue > (nodeValuesPac[posY][posX] + nodeValuesBlink[posY][posX])) {
+                            lowestValue = (nodeValuesPac[posY][posX] + nodeValuesBlink[posY][posX]);
+                            bestPath[0] = posY;
+                            bestPath[1] = posX;
+                        }
                     }
                 }
+
             }
         }
         return bestPath;

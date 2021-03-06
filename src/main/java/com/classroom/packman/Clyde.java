@@ -42,6 +42,10 @@ public class Clyde extends Sprites{
         return this.returnHome;
     }
     
+    public void readyForAction(){
+        this.returnHome = false;
+    }
+    
     public void moveClyde(double newPosX, double newPosY){
         ImageView clydeImageView = this.getGraphics();
         clydeImageView.setTranslateX(newPosX);
