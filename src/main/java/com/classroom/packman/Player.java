@@ -16,10 +16,11 @@ import javafx.scene.image.ImageView;
 public class Player extends Sprites {
 
     private int points, lives, activeDirection;
-    String name;
+    private String name;
     private ImageView[] baseGraphic = new ImageView[4];
-    double width, height, posX, posY;
-    boolean powered = false;
+    private double width, height, posX, posY;
+    private boolean powered = false;
+    private int poweredTicker = 50;
     
 
     public Player(String name, double height, double width, double newPosX, double newPosY) {
@@ -70,11 +71,7 @@ public class Player extends Sprites {
     }
     
     public void removeLife(){
-        if (this.lives <= 1){
-            //game over
-        } else {
-            this.lives--;
-        }
+        this.lives--;
     }
     
     public void updatePoints(){

@@ -27,10 +27,10 @@ public class Loader {
         - powerup
         E exit
         S packman start
-        1 ghost Pinky
+        3 ghost Pinky
         2 ghost Inky 
-        3 ghost Clyde
-        4 ghost Blinky
+        4 ghost Clyde
+        1 ghost Blinky
     */
     
     /**

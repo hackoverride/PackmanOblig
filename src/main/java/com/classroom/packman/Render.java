@@ -149,7 +149,6 @@ public class Render extends Pane {
                 currentLevel[tempY][tempX] = '1';
             }
 
-
             /* CLYDE */
             tempX = clyde.getLevelPositionX();
             tempY = clyde.getLevelPositionY();
@@ -188,6 +187,38 @@ public class Render extends Pane {
             clyde.setLastChar(currentLevel[tempY][tempX]);
             currentLevel[tempY][tempX] = '4';
 
+            /*
+            Now if a ghost has "eaten" pacman then remove life.
+            
+             */
+            if (clyde.getLastChar() == 'S' || blinky.getLastChar() == 'S') {
+                if (!pacman.checkPower()) {
+                    boolean pacAlive = false;
+                    for (int i = 0; i < currentLevel.length; i++) {
+                        for (int j = 0; j < currentLevel[i].length; j++) {
+                            if (currentLevel[i][j] == 'S') {
+                                pacAlive = true;
+                                continue;
+                            }
+                        }
+                    }
+                    if (!pacAlive) {
+                        pacman.removeLife();
+                        int[] pacPos = pacman.getStartPosition();
+                        pacman.setLevelPosition(pacPos[0], pacPos[1]);
+                        currentLevel[pacPos[0]][pacPos[1]] = 'S';
+
+                        if (clyde.getLastChar() == 'S') {
+                            clyde.setLastChar('O');
+                        }
+                        if (blinky.getLastChar() == 'S') {
+                            blinky.setLastChar('O');
+                        }
+                        blinky.returnHome();
+                        clyde.returnHome();
+                    }
+                }
+            }
         }
     }
 
@@ -271,8 +302,12 @@ public class Render extends Pane {
 
             } else {
                 pacman.removeLife();
-                // Level reset position is always: X: 12 Y: 10 
-                pacman.setLevelPosition(12, 10);
+                // Level reset position is always: X: 12 Y: 10
+                int[] start = pacman.getStartPosition();
+                tempX = start[1];
+                tempY = start[0];
+                blinky.returnHome();
+                clyde.returnHome();
             }
         }
 
@@ -353,8 +388,10 @@ public class Render extends Pane {
         for (int i = 0; i < currentLevel.length; i++) {
             for (int j = 0; j < currentLevel[i].length; j++) {
                 if (currentLevel[i][j] == 'X') {
-
+                    // dont concider walls for best moves.
                 } else {
+                    // ghosts can only move right, left, up or down. not diagonally.
+                    
                     int posAwayFromPacY = Math.abs(pacPos[0] - i);
                     int posAwayFromPacX = Math.abs(pacPos[1] - j);
                     nodeValuesPac[i][j] = (posAwayFromPacY + posAwayFromPacX);
@@ -405,11 +442,18 @@ public class Render extends Pane {
 
                     } else {
                         //allocating the sum of nodeValues
-                        if (lowestValue > (nodeValuesPac[posY][posX] + nodeValuesBlink[posY][posX])) {
-                            lowestValue = (nodeValuesPac[posY][posX] + nodeValuesBlink[posY][posX]);
+                        if (currentLevel[posY][posX] == 'S') {
+                            // pacman is there so it would be best to kill player now!
                             bestPath[0] = posY;
                             bestPath[1] = posX;
+                        } else {
+                            if (lowestValue > (nodeValuesPac[posY][posX] + nodeValuesBlink[posY][posX])) {
+                                lowestValue = (nodeValuesPac[posY][posX] + nodeValuesBlink[posY][posX]);
+                                bestPath[0] = posY;
+                                bestPath[1] = posX;
+                            }
                         }
+
                     }
                 }
 

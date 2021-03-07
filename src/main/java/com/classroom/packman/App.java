@@ -19,7 +19,7 @@ public class App extends Application {
     
     final int HEIGHT = 900;
     final int WIDTH = HEIGHT;
-    Scene scene;
+    Scene scene, gameOver;
     
     /**
      *
@@ -49,7 +49,7 @@ public class App extends Application {
         Render playBoard = new Render();
         playBoard.setStyle("-fx-background-color: #232323");
         GameEngine engine = new GameEngine(playBoard);
-        playBoard.draw(HEIGHT, WIDTH);
+        playBoard.draw(HEIGHT - 30, WIDTH);
         Player pacman = playBoard.getPlayer();
         mainWindow.setCenter(playBoard); 
         scene.setOnKeyPressed(e -> {
@@ -85,7 +85,18 @@ public class App extends Application {
                     break;
             }
             score.setText("Score: " + pacman.getPoints());
-            lives.setText("Lives: " + pacman.getLives());
+            int tempLives = pacman.getLives();
+            // handle gameover tactics here! before we render to screen.
+            if (tempLives <= 0){
+                Label gameOverLabel = new Label("GAME OVER!");
+                BorderPane gameOverPane = new BorderPane();
+                gameOverPane.setStyle("-fx-background-color: #000;");
+                gameOverLabel.setStyle("-fx-text-fill: #FFF; -fx-font-size: 42px;");
+                gameOverPane.setCenter(gameOverLabel);
+                gameOver = new Scene(gameOverPane ,WIDTH, HEIGHT);
+                stage.setScene(gameOver);
+            }
+            lives.setText("Lives: " + tempLives);
         });
     }
 
