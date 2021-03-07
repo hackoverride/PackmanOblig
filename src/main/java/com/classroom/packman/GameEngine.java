@@ -21,17 +21,18 @@ public class GameEngine {
     
     /**
      *
+     * @param playBoard
+     * @param playBoard
      */
     public GameEngine(Render playBoard){
         this.playBoard = playBoard;
     }
         
-    /**
-     *
-     */
+    
     public void stop(){
         this.running = false;
     }
+    
     
     public void run(){
         // starting up the gameloop...
@@ -47,6 +48,10 @@ public class GameEngine {
         timeline.play();
     }
     
+    /**
+     *
+     * @return if running returns true else false
+     */
     public boolean isRunning(){
         return this.running;
     }

@@ -1,4 +1,5 @@
 com\classroom\packman\Render.class
+com\classroom\packman\Clyde.class
 com\classroom\packman\Blinky.class
 module-info.class
 com\classroom\packman\GameEngine.class

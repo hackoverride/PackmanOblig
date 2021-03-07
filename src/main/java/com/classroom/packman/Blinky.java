@@ -17,6 +17,13 @@ public class Blinky extends Sprites{
     
     boolean returnHome = false;
     
+    /**
+     *
+     * @param height
+     * @param width
+     * @param newPosX Initial x pos for blinky gif
+     * @param newPosY Initial y pos for blinky gif
+     */
     public Blinky(double height, double width, double newPosX, double newPosY) {
         try{
             File redGhost = new File("redghost.gif");
@@ -34,18 +41,29 @@ public class Blinky extends Sprites{
         }
     }
     
+   
     public void returnHome(){
         this.returnHome = true;
     }
     
+   
     public void readyForAction(){
         this.returnHome = false;
     }
     
+    /**
+     *
+     * @return true if returning home otherwise false
+     */
     public boolean isReturningHome(){
         return this.returnHome;
     }
     
+    /**
+     *
+     * @param newPosX New x posision for blinky gif
+     * @param newPosY New y posision for blinky gif
+     */
     public void moveBlinky(double newPosX, double newPosY){
         ImageView redImageView = this.getGraphics();
         redImageView.setTranslateX(newPosX);

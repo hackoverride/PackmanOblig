@@ -31,16 +31,40 @@ public class Sprites{
         
     }
     
+     /**
+     *
+     * @param height
+     * @param width
+     * @param id
+     */
+    
     Sprites(int height, int width, String id){
         this.posX = Math.floor(width /2);
         this.posY = Math.floor(height /2);
         this.id = id;
     }
     
+    /**
+     *
+     * @param iv
+     * @param height
+     * @param width
+     * @param id
+     */
+    
+    
     Sprites(ImageView iv, int height, int width, String id){
         this(height, width, id);
         this.baseGraphic = iv;
     }
+    /**
+     *
+     * @param iv
+     * @param posX
+     * @param posY
+     * @param id
+     */
+    
     
     Sprites(ImageView iv, double posX, double posY, String id){
         this.posX = posX;
@@ -51,34 +75,57 @@ public class Sprites{
     
     /**
      *
-     * @return
+     * @return graphic pos of player or ghost
      */
     public double getPosX(){
         return this.posX;
     }
     
+    /**
+     *
+     * @param x
+     * @param y
+     */
     public void setStartPosition(int x, int y){
         this.startPosition[0] = y;
         this.startPosition[1] = x;
     }
     
+    /**
+     *
+     * @return returns an int array containing x and y start coordinates
+     */
     public int[] getStartPosition() {
         return this.startPosition;
     }
     
+    /**
+     *
+     * @param c 
+     */
     public void setLastChar(char c){
         this.lastChar = c;
     }
     
+    /**
+     *
+     * @return returns the last char the object passed over
+     */
     public char getLastChar(){
         return this.lastChar;
     }
     
-    
+    /**
+     *
+     */
     public void waitTicker() {
         this.waitTicker++;
     }
     
+    /**
+     *
+     * @return returns a true if wait time is over, else false
+     */
     public boolean waitedLongEnough(){
         if (this.waitTicker >= 14){
             this.waitTicker = 0;
@@ -87,20 +134,38 @@ public class Sprites{
         return false;
     }
     
+    /**
+     *
+     * @param x
+     * @param y
+     */
     public void setLevelPosition(int x, int y){
         // Here we handle where the Sprite is on the level char[][]
             this.levelPosX = x;
             this.levelPosY = y;
     }
     
+    /**
+     *
+     * @return returns int value of current level x position of sprite
+     */
     public int getLevelPositionX(){
         return this.levelPosX;
     }
     
+    /**
+     *
+     * @return returns int value of current level y position of sprite
+     */
     public int getLevelPositionY(){
         return this.levelPosY;
     }
     
+    /**
+     *
+     * @param x
+     * @param y
+     */
     public void setPosition(double x, double y){
         // Here we handle the graphical position of the gif.
         this.posX = x;
@@ -109,7 +174,7 @@ public class Sprites{
     
     /**
      *
-     * @return
+     * @return returns double grahpical y pos
      */
     public double getPosY(){
         return this.posY;
@@ -144,12 +209,16 @@ public class Sprites{
     
     /**
      *
-     * @return
+     * @return returns image as ImageView 
      */
     public ImageView getGraphics(){
         return this.baseGraphic;
     }
     
+    /**
+     *
+     * @param image
+     */
     public void setGraphics(ImageView image){
         this.baseGraphic = image;
     }

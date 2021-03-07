@@ -27,6 +27,11 @@ public class Render extends Pane {
     double HEIGHT, WIDTH;
     private int currentLevelMaxPoints = 0;
 
+    /**
+     *
+     * @param height
+     * @param width
+     */
     public void draw(int height, int width) {
         // drawing the map and sprites
         /* 
@@ -97,10 +102,18 @@ public class Render extends Pane {
         this.getChildren().addAll(pacman.getGraphics());
     }
 
+    /**
+     *
+     * @return returns the player object
+     */
     public Player getPlayer() {
         return this.pacman;
     }
 
+    /**
+     * Controlls the ticker, and also the movment 
+     * of ghosts and the movment direction of packman
+     */
     public void ghostLogic() {
         // Blinky!
         this.ticker++;
@@ -222,6 +235,11 @@ public class Render extends Pane {
         }
     }
 
+    /**
+     *
+     * @param direction sets player direction 
+     * 0 = left, 1 = right, 2 = up, 3 = down
+     */
     public void movePlayer(int direction) {
         // 0 = left, 1 = right, 2 = up, 3 = down
         // player = 'S'.
@@ -315,6 +333,11 @@ public class Render extends Pane {
         pacman.setLevelPosition(tempX, tempY);
     }
 
+    /**
+     *
+     * @param remove char to remove
+     * @param add char to add in place
+     */
     public void removeCharFromLevel(char remove, char add) {
         for (int i = 0; i < currentLevel.length; i++) {
             for (int j = 0; j < currentLevel[i].length; j++) {
@@ -326,6 +349,9 @@ public class Render extends Pane {
         }
     }
 
+    /**
+     * Method for drawing the graphics based on current active level
+     */
     public void render() {
 
         // adding ghosts, points, powerups and pacman

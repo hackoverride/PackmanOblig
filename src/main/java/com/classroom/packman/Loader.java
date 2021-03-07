@@ -59,6 +59,8 @@ public class Loader {
     
     /**
      *
+     * @return returns a char array of the first level
+     * 
      */
     public char[][] getFirstLevel(){
         char[][] level = new char[31][28];
@@ -90,6 +92,10 @@ public class Loader {
         return level;
     }
     
+    /**
+     *
+     * @return returns a char array of the second level
+     */
     public char[][] getSecondLevel(){
         char[][] level = new char[31][28];
         int pos = 0;

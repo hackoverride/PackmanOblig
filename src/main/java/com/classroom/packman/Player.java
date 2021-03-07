@@ -22,7 +22,14 @@ public class Player extends Sprites {
     private boolean powered = false;
     private int poweredTicker = 50;
     
-
+    /**
+     *
+     * @param name
+     * @param height
+     * @param width
+     * @param newPosX Initial x pos for pacman gif
+     * @param newPosY Initial y pos for pacman gif
+     */
     public Player(String name, double height, double width, double newPosX, double newPosY) {
         super();
         this.name = name;
@@ -62,53 +69,90 @@ public class Player extends Sprites {
 
     }
     
+    /**
+     *
+     * @return returns number 0-3 indicating direction
+     */
     public int getActiveDirection(){
         return this.activeDirection;
     }
     
+    /**
+     *
+     * @return returns an int indicating remaining lives
+     */
     public int getLives(){
         return this.lives;
     }
+    
     
     public void removeLife(){
         this.lives--;
     }
     
+    
     public void updatePoints(){
         this.points++;
     }
     
+    /**
+     *
+     * @return returns current point value
+     */
     public int getPoints(){
         return this.points;
     }
     
+   
     public void powerup(){
         this.powered = true;
     }
     
+    /**
+     *
+     * @return returns true if actice powerup else false
+     */
     public boolean checkPower(){
         return this.powered;
     }
     
+    /**
+     *
+     * @return returns a ImageView[] of direction.
+     */
     public ImageView getGraphics(){
         this.baseGraphic[activeDirection].setFitHeight(this.height);
         this.baseGraphic[activeDirection].setFitWidth(this.width);
         return this.baseGraphic[activeDirection];
     }
     
-    public void setDirection(int i){
-        this.activeDirection = i;
+    /**
+     *
+     * @param direction
+     */
+    public void setDirection(int direction){
+        this.activeDirection = direction;
     }
     
-    public void setGraphics(int direction, ImageView iv) {
+    /**
+     *
+     * @param direction
+     * @param imageView
+     */
+    public void setGraphics(int direction, ImageView imageView) {
         try {
-            this.baseGraphic[direction] = iv;
+            this.baseGraphic[direction] = imageView;
         } catch (IndexOutOfBoundsException e){
             System.out.println("index out of bound");
         }
         
     }
     
+    /**
+     *
+     * @param newPosX New x posision for packman gif 
+     * @param newPosY New y posision for packman gif
+     */
     public void movePacman(double newPosX, double newPosY){
         ImageView pacman = this.getGraphics();
         pacman.setTranslateX(newPosX);

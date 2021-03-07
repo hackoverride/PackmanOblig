@@ -22,7 +22,7 @@ public class App extends Application {
     Scene scene, gameOver;
     
     /**
-     *
+     * 
      * @param stage
      */
     @Override

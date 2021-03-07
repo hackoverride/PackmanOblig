@@ -17,6 +17,13 @@ public class Clyde extends Sprites{
     
     private boolean returnHome = false;
     
+    /**
+     *
+     * @param height
+     * @param width
+     * @param newPosX initial x pos for Clyde gif
+     * @param newPosY initial y pos for Clyde gif
+     */
     public Clyde(double height, double width, double newPosX, double newPosY) {
         try{
             File clydeFile = new File("ghost2.gif");
@@ -34,18 +41,29 @@ public class Clyde extends Sprites{
         }
     }
     
+   
     public void returnHome(){
         this.returnHome = true;
     }
     
+    /**
+     *
+     * @return is true if return home else false
+     */
     public boolean isReturningHome(){
         return this.returnHome;
     }
+    
     
     public void readyForAction(){
         this.returnHome = false;
     }
     
+    /**
+     *
+     * @param newPosX New x posision for clyde gif
+     * @param newPosY New y posision for clyde gif
+     */
     public void moveClyde(double newPosX, double newPosY){
         ImageView clydeImageView = this.getGraphics();
         clydeImageView.setTranslateX(newPosX);
