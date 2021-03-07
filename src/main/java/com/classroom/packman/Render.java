@@ -68,19 +68,19 @@ public class Render extends Pane {
                     case '1':
                         blinky = new Blinky(sectionHigh, sectionWide, (j * sectionWide), (i * sectionHigh));
                         blinky.setLevelPosition(j, i);
-                        blinky.setStartPosition(j, i);
+                        blinky.setStartPosition(i, j);
                         blinky.returnHome();
                         break;
                     case 'S':
                         pacman = new Player("Player1", sectionHigh, sectionWide, (j * sectionWide), (i * sectionHigh));
                         pacman.setLevelPosition(j, i);
-                        pacman.setStartPosition(j, i);
+                        pacman.setStartPosition(i, j);
                         break;
                     //pacman.setLevelPosition(j, i);
                     case '4':
                         clyde = new Clyde(sectionHigh, sectionWide, (j * sectionWide), (i * sectionHigh));
                         clyde.setLevelPosition(j, i);
-                        clyde.setStartPosition(j, i);
+                        clyde.setStartPosition(i, j);
                         clyde.returnHome();
                         break;
                     default:
@@ -138,6 +138,10 @@ public class Render extends Pane {
             // Limit to no diagonal movement.
             if (blinky.isReturningHome()) {
                 // blinky does not move.
+                int[] pos = blinky.getStartPosition();
+                removeCharFromLevel('1', blinky.getLastChar());
+                blinky.setLevelPosition(pos[0], pos[1]);
+                currentLevel[pos[1]][pos[0]] = '1';
             } else {
                 removeCharFromLevel('1', blinky.getLastChar());
                 blinky.setLevelPosition(tempX, tempY);
@@ -175,12 +179,14 @@ public class Render extends Pane {
             }
             if (clyde.isReturningHome()) {
                 // clyde dont move!
-            } else {
-                removeCharFromLevel('4', clyde.getLastChar());
-                clyde.setLevelPosition(tempX, tempY);
-                clyde.setLastChar(currentLevel[tempY][tempX]);
-                currentLevel[tempY][tempX] = '4';
+                int[] pos = clyde.getStartPosition();
+                tempX = pos[0];
+                tempY = pos[1];
             }
+            removeCharFromLevel('4', clyde.getLastChar());
+            clyde.setLevelPosition(tempX, tempY);
+            clyde.setLastChar(currentLevel[tempY][tempX]);
+            currentLevel[tempY][tempX] = '4';
 
         }
     }
@@ -264,11 +270,6 @@ public class Render extends Pane {
                 }
 
             } else {
-                System.out.println("! dead ? !");
-                if (pacman.getLives() <= 1) {
-                    // pacman only has last life left. therefore gameover!
-
-                }
                 pacman.removeLife();
                 // Level reset position is always: X: 12 Y: 10 
                 pacman.setLevelPosition(12, 10);

@@ -43,7 +43,7 @@ public class GameEngine {
             playBoard.render();
         });
         timeline.getKeyFrames().add(keys);
-        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setCycleCount(timeline.INDEFINITE);
         timeline.play();
     }
     
